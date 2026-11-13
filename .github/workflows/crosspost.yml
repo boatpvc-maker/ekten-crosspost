@@ -2,9 +2,9 @@ name: crosspost
 
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '3,13,23,33,43,53 * * * *'
   push:
-    # Запуск только чтения: действие берётся из trigger.txt (check, probe или audit).
+    # Р—Р°РїСѓСЃРє С‚РѕР»СЊРєРѕ С‡С‚РµРЅРёСЏ: РґРµР№СЃС‚РІРёРµ Р±РµСЂС‘С‚СЃСЏ РёР· trigger.txt (check, probe РёР»Рё audit).
     paths: ['trigger.txt']
   workflow_dispatch:
     inputs:
@@ -14,10 +14,10 @@ on:
         type: choice
         options: [cron, check, probe, audit, status, init, enqueue]
       enqueue_arg:
-        description: 'Для enqueue: дата ГГГГ-ММ-ДД или номера постов через запятую'
+        description: 'Р”Р»СЏ enqueue: РґР°С‚Р° Р“Р“Р“Р“-РњРњ-Р”Р” РёР»Рё РЅРѕРјРµСЂР° РїРѕСЃС‚РѕРІ С‡РµСЂРµР· Р·Р°РїСЏС‚СѓСЋ'
         default: ''
       platforms:
-        description: 'Для enqueue: tg, max или tg,max'
+        description: 'Р”Р»СЏ enqueue: tg, max РёР»Рё tg,max'
         default: 'tg,max'
 
 permissions:
@@ -47,7 +47,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Restore state (ветка state)
+      - name: Restore state (РІРµС‚РєР° state)
         run: |
           mkdir -p data
           if git ls-remote --exit-code --heads origin state >/dev/null 2>&1; then
@@ -63,11 +63,11 @@ jobs:
           php-version: '8.3'
           extensions: curl, mbstring, json, dom
 
-      - name: Корневой сертификат Минцифры (только для MAX)
+      - name: РљРѕСЂРЅРµРІРѕР№ СЃРµСЂС‚РёС„РёРєР°С‚ РњРёРЅС†РёС„СЂС‹ (С‚РѕР»СЊРєРѕ РґР»СЏ MAX)
         run: |
           curl -fsS -m 30 -o data/ca-max.pem https://gu-st.ru/content/lending/russian_trusted_root_ca_pem.crt
           fp=$(openssl x509 -in data/ca-max.pem -noout -fingerprint -sha256 | cut -d= -f2)
-          [ "$fp" = "D2:6D:2D:02:31:B7:C3:9F:92:CC:73:85:12:BA:54:10:35:19:E4:40:5D:68:B5:BD:70:3E:97:88:CA:8E:CF:31" ] || { echo "отпечаток сертификата не совпал"; rm -f data/ca-max.pem; exit 1; }
+          [ "$fp" = "D2:6D:2D:02:31:B7:C3:9F:92:CC:73:85:12:BA:54:10:35:19:E4:40:5D:68:B5:BD:70:3E:97:88:CA:8E:CF:31" ] || { echo "РѕС‚РїРµС‡Р°С‚РѕРє СЃРµСЂС‚РёС„РёРєР°С‚Р° РЅРµ СЃРѕРІРїР°Р»"; rm -f data/ca-max.pem; exit 1; }
 
       - name: Run
         run: |
@@ -78,19 +78,19 @@ jobs:
           case "$action" in
             check|probe|audit|status) php crosspost.php --$action 2>&1 | tee data/report.txt ;;
             restore)
-              # trigger.txt: "restore tg|max 109,110,111" — партия накопленных постов; сначала обычный запуск (создаёт основу состояния)
+              # trigger.txt: "restore tg|max 109,110,111" вЂ” РїР°СЂС‚РёСЏ РЅР°РєРѕРїР»РµРЅРЅС‹С… РїРѕСЃС‚РѕРІ; СЃРЅР°С‡Р°Р»Р° РѕР±С‹С‡РЅС‹Р№ Р·Р°РїСѓСЃРє (СЃРѕР·РґР°С‘С‚ РѕСЃРЅРѕРІСѓ СЃРѕСЃС‚РѕСЏРЅРёСЏ)
               pl="$(head -n1 trigger.txt | awk '{print $2}')"; ids="$(head -n1 trigger.txt | awk '{print $3}')"
-              case "$pl" in tg|max) ;; *) echo "платформа должна быть tg или max"; exit 1 ;; esac
-              case "$ids" in ''|*[!0-9,]*) echo "список номеров некорректен"; exit 1 ;; esac
+              case "$pl" in tg|max) ;; *) echo "РїР»Р°С‚С„РѕСЂРјР° РґРѕР»Р¶РЅР° Р±С‹С‚СЊ tg РёР»Рё max"; exit 1 ;; esac
+              case "$ids" in ''|*[!0-9,]*) echo "СЃРїРёСЃРѕРє РЅРѕРјРµСЂРѕРІ РЅРµРєРѕСЂСЂРµРєС‚РµРЅ"; exit 1 ;; esac
               { php crosspost.php --cron; php crosspost.php --enqueue="$ids" --platforms="$pl"; php crosspost.php --cron; php crosspost.php --status; } 2>&1 | tee data/report.txt ;;
             init) php crosspost.php --init-state 2>&1 | tee data/report.txt ;;
             full) { php crosspost.php --probe; echo; php crosspost.php --audit; } 2>&1 | tee data/report.txt ;;
             enqueue) php crosspost.php --enqueue="${ENQUEUE_ARG}" --platforms="${ENQUEUE_PLATFORMS}" 2>&1 | tee data/report.txt ;;
             cron)    php crosspost.php --cron ;;
-            *) echo "неизвестное действие"; exit 1 ;;
+            *) echo "РЅРµРёР·РІРµСЃС‚РЅРѕРµ РґРµР№СЃС‚РІРёРµ"; exit 1 ;;
           esac
 
-      - name: Save state (ветка state)
+      - name: Save state (РІРµС‚РєР° state)
         if: always()
         run: |
           [ -f data/state.json ] || [ -f data/report.txt ] || exit 0
