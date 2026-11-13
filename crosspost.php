@@ -1201,6 +1201,28 @@ function run_probe(): int
         } catch (Throwable $e) {
             say('  список чатов бота: ' . redact($e->getMessage()));
         }
+        try {
+            $alt = max_api('GET', 'https://platform-api.max.ru/chats?count=50');
+            say('  platform-api.max.ru/chats: ответ получен, чатов: ' . count($alt['chats'] ?? []));
+            foreach ($alt['chats'] ?? [] as $ch) {
+                say('    chat_id ' . ($ch['chat_id'] ?? '?') . '  ' . ($ch['type'] ?? '?') . '  «' . ($ch['title'] ?? '?') . '»  ссылка: ' . ($ch['link'] ?? '-'));
+            }
+        } catch (Throwable $e) {
+            say('  platform-api.max.ru/chats: ' . redact($e->getMessage()));
+        }
+        try {
+            $upd = max_api('GET', '/updates?limit=100&timeout=0');
+            $seen = [];
+            foreach ($upd['updates'] ?? [] as $u) {
+                $cid = $u['chat_id'] ?? ($u['message']['recipient']['chat_id'] ?? null);
+                if ($cid !== null) {
+                    $seen[(string)$cid] = (string)($u['update_type'] ?? '?');
+                }
+            }
+            say('  события бота (/updates): ' . count($upd['updates'] ?? []) . ', chat_id в них: ' . ($seen ? implode(', ', array_map(static fn($k, $v) => $k . ' (' . $v . ')', array_keys($seen), $seen)) : 'нет'));
+        } catch (Throwable $e) {
+            say('  /updates: ' . redact($e->getMessage()));
+        }
         $main = max_main_chat();
         say('  основной канал ЭкТен в MAX: ' . ($main !== '' ? 'chat_id ' . $main : 'НЕ НАЙДЕН среди каналов бота'));
     } catch (Throwable $e) {
@@ -1252,7 +1274,7 @@ function tg_public_history(string &$why): ?array
             $msgs[$id] = [
                 'id' => $id,
                 'ts' => $time ? (int)strtotime((string)$time->getAttribute('datetime')) : 0,
-                'photo' => $xp->query(".//a[contains(@class,'tgme_widget_message_photo_wrap')]", $w)->length > 0,
+                'photo' => $xp->query(".//a[contains(@class,'tgme_widget_message_photo_wrap')]", $w)->length,
                 'text' => $textNode ? trim((string)$textNode->textContent) : '',
             ];
         }
@@ -1338,7 +1360,7 @@ function reconcile_post(array $content, array $hist, array $index): array
     }
     $plain = static fn(string $s): int => mb_strlen(preg_replace('~https?://\S+|\s+~u', '', $s) ?? $s);
     if ($plain($content['text']) <= 3800 && $plain($hist[$pos]['text']) < 0.9 * $plain($content['text'])) {
-        $state .= '; текст короче оригинала';
+        $state .= '; текст короче оригинала (' . $plain($hist[$pos]['text']) . ' из ' . $plain($content['text']) . ')';
     }
     return ['state' => $state, 'missing_photos' => $missing, 'dups' => count($hits) - 1];
 }
@@ -1363,7 +1385,7 @@ function run_audit(): int
     if ($tg === null) {
         say('Telegram: история НЕДОСТУПНА — ' . $why . '. Bot API старую историю канала не отдаёт, результат не придумываю.');
     } else {
-        $hist = array_map(static fn($m) => ['text' => $m['text'], 'photos' => $m['photo'] ? 1 : 0, 'ts' => $m['ts']], $tg);
+        $hist = array_map(static fn($m) => ['text' => $m['text'], 'photos' => (int)$m['photo'], 'ts' => $m['ts']], $tg);
         say('Telegram: прочитано сообщений публичной ленты: ' . count($hist) . ($hist ? ', с ' . date('d.m.Y', $hist[0]['ts']) : ''));
         $platforms['tg'] = $hist;
     }
