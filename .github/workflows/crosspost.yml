@@ -3,13 +3,16 @@ name: crosspost
 on:
   schedule:
     - cron: '*/5 * * * *'
+  push:
+    # Запуск только чтения: действие берётся из trigger.txt (check, probe или audit).
+    paths: ['trigger.txt']
   workflow_dispatch:
     inputs:
       action:
-        description: 'cron | check | audit | enqueue'
+        description: 'cron | check | probe | audit | enqueue'
         default: 'cron'
         type: choice
-        options: [cron, check, audit, enqueue]
+        options: [cron, check, probe, audit, enqueue]
       enqueue_arg:
         description: 'Для enqueue: дата ГГГГ-ММ-ДД или номера постов через запятую'
         default: ''
@@ -27,7 +30,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 15
     env:
       MODE: ${{ vars.MODE || 'test' }}
       VK_SERVICE_KEY: ${{ secrets.VK_SERVICE_KEY }}
@@ -37,7 +40,10 @@ jobs:
       TG_MAIN_CHAT: ${{ vars.TG_MAIN_CHAT || '-1004297433128' }}
       MAX_BOT_TOKEN: ${{ secrets.MAX_BOT_TOKEN }}
       MAX_TEST_CHAT: ${{ secrets.MAX_TEST_CHAT }}
-      MAX_MAIN_CHAT: ${{ secrets.MAX_MAIN_CHAT }}
+      MAX_MAIN_CHAT: ${{ secrets.MAX_MAIN_CHAT || vars.MAX_MAIN_CHAT }}
+      ACTION_INPUT: ${{ github.event.inputs.action }}
+      ENQUEUE_ARG: ${{ github.event.inputs.enqueue_arg }}
+      ENQUEUE_PLATFORMS: ${{ github.event.inputs.platforms }}
     steps:
       - uses: actions/checkout@v4
 
@@ -46,34 +52,36 @@ jobs:
           mkdir -p data
           if git ls-remote --exit-code --heads origin state >/dev/null 2>&1; then
             git fetch --depth=1 origin state
-            git show FETCH_HEAD:state.json > data/state.json 2>/dev/null || true
-            git show FETCH_HEAD:journal.log > data/journal.log 2>/dev/null || true
+            git show FETCH_HEAD:state.json > data/state.json 2>/dev/null || rm -f data/state.json
+            git show FETCH_HEAD:journal.log > data/journal.log 2>/dev/null || rm -f data/journal.log
+            git show FETCH_HEAD:report.txt > data/report.txt 2>/dev/null || rm -f data/report.txt
+            git show FETCH_HEAD:audit.json > data/audit.json 2>/dev/null || rm -f data/audit.json
           fi
 
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          extensions: curl, mbstring, json
+          extensions: curl, mbstring, json, dom
 
       - name: Run
         run: |
           set -o pipefail
-          action="${{ github.event.inputs.action || 'cron' }}"
+          action="${ACTION_INPUT}"
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then action="$(tr -d '[:space:]' < trigger.txt)"; fi
+          [ -n "$action" ] || action=cron
           case "$action" in
-            check)   php crosspost.php --check ;;
-            audit)   php crosspost.php --audit ;;
-            enqueue) php crosspost.php --enqueue="${{ github.event.inputs.enqueue_arg }}" --platforms="${{ github.event.inputs.platforms }}" ;;
-            *)       php crosspost.php --cron ;;
+            check|probe|audit) php crosspost.php --$action 2>&1 | tee data/report.txt ;;
+            enqueue) php crosspost.php --enqueue="${ENQUEUE_ARG}" --platforms="${ENQUEUE_PLATFORMS}" 2>&1 | tee data/report.txt ;;
+            cron)    php crosspost.php --cron ;;
+            *) echo "неизвестное действие"; exit 1 ;;
           esac
 
       - name: Save state (ветка state)
         if: always()
         run: |
-          [ -f data/state.json ] || exit 0
+          [ -f data/state.json ] || [ -f data/report.txt ] || exit 0
           d=$(mktemp -d)
-          cp data/state.json "$d/"
-          [ -f data/journal.log ] && cp data/journal.log "$d/"
-          [ -f data/audit.json ] && cp data/audit.json "$d/"
+          for f in state.json journal.log report.txt audit.json; do [ -f "data/$f" ] && cp "data/$f" "$d/"; done
           cd "$d"
           git init -q
           git config user.name "crosspost-bot"

@@ -102,7 +102,10 @@ function redact(string $s): string
 
 function mask(string $value): string
 {
-    return $value === '' ? 'нет' : 'есть (…' . mb_substr($value, -4) . ')';
+    if ($value === '') {
+        return 'нет';
+    }
+    return getenv('GITHUB_ACTIONS') === 'true' ? 'есть' : 'есть (…' . mb_substr($value, -4) . ')';
 }
 
 /** Журнал: только время, номер поста ВК, площадка и результат. */
@@ -1075,41 +1078,313 @@ function vk_all_posts(): array
     return $all;
 }
 
-/** Аудит: что есть на стене ВК и что уже учтено в состоянии. Ничего не публикует и не меняет. */
+const TG_PUBLIC_USER = 'ekten_ru';
+const MAX_PUBLIC_LINK = 'channel_ekten';
+
+/** Ключ сопоставления: первые 60 букв и цифр текста без регистра, ссылок и знаков. */
+function match_key(string $text): string
+{
+    $text = preg_replace('~https?://\S+~u', '', $text) ?? $text;
+    $t = preg_replace('/[^\p{L}\p{N}]+/u', '', mb_strtolower($text)) ?? '';
+    return mb_substr($t, 0, 60);
+}
+
+/** Все каналы MAX, где бот состоит: id, тип, название, ссылка. */
+function max_chats(): array
+{
+    $out = [];
+    $marker = null;
+    for ($i = 0; $i < 10; $i++) {
+        $r = max_api('GET', '/chats?count=100' . ($marker ? '&marker=' . rawurlencode((string)$marker) : ''));
+        foreach ($r['chats'] ?? [] as $c) {
+            $out[] = $c;
+        }
+        $marker = $r['marker'] ?? null;
+        if (!$marker) {
+            break;
+        }
+    }
+    return $out;
+}
+
+/** Основной канал MAX: из настроек, иначе по публичной ссылке среди каналов бота. */
+function max_main_chat(): string
+{
+    if (Ctx::$cfg['MAX_MAIN_CHAT'] !== '') {
+        return Ctx::$cfg['MAX_MAIN_CHAT'];
+    }
+    foreach (max_chats() as $c) {
+        if (stripos((string)($c['link'] ?? ''), MAX_PUBLIC_LINK) !== false) {
+            return (string)$c['chat_id'];
+        }
+    }
+    return '';
+}
+
+/** Только чтение: доступ к ВК, Telegram и MAX, каналы, права. Ничего не отправляет. */
+function run_probe(): int
+{
+    load_config();
+    ensure_dirs();
+    $c = Ctx::$cfg;
+    say('ПРОВЕРКА ДОСТУПА (только чтение). Режим: ' . $c['MODE']);
+    foreach (['VK_SERVICE_KEY', 'TG_BOT_TOKEN', 'MAX_BOT_TOKEN'] as $k) {
+        say('  ' . str_pad($k, 16) . mask($c[$k]));
+    }
+    say('');
+    say('ВК:');
+    try {
+        $r = vk('wall.get', ['owner_id' => -vk_group_id(), 'count' => 1, 'filter' => 'owner']);
+        say('  PASS: стена читается, группа ' . vk_group_id() . ', постов от имени сообщества: ' . (int)($r['count'] ?? 0));
+    } catch (Throwable $e) {
+        say('  FAIL: ' . redact($e->getMessage()));
+    }
+    say('Telegram:');
+    try {
+        $me = tg('getMe', []);
+        say('  PASS: бот @' . ($me['username'] ?? '?'));
+        foreach (['MAIN', 'TEST'] as $m) {
+            $chat = $c['TG_' . $m . '_CHAT'];
+            if ($chat === '') {
+                say('  ' . $m . ': канал не задан');
+                continue;
+            }
+            try {
+                $info = tg('getChat', ['chat_id' => $chat]);
+                $mem = tg('getChatMember', ['chat_id' => $chat, 'user_id' => (string)$me['id']]);
+                say('  ' . $m . ': «' . ($info['title'] ?? '?') . '» (' . ($info['type'] ?? '?') . '), статус бота: ' . ($mem['status'] ?? '?')
+                    . ', может публиковать: ' . ((($mem['status'] ?? '') === 'creator' || !empty($mem['can_post_messages'])) ? 'да' : 'нет'));
+            } catch (Throwable $e) {
+                say('  ' . $m . ': FAIL ' . redact($e->getMessage()));
+            }
+        }
+    } catch (Throwable $e) {
+        say('  FAIL: ' . redact($e->getMessage()));
+    }
+    say('MAX:');
+    try {
+        $me = max_api('GET', '/me');
+        say('  PASS: бот ' . ($me['name'] ?? $me['first_name'] ?? '?') . (isset($me['username']) ? ' (@' . $me['username'] . ')' : ''));
+        $chats = max_chats();
+        say('  каналов и чатов, где бот состоит: ' . count($chats));
+        foreach ($chats as $ch) {
+            say('    chat_id ' . ($ch['chat_id'] ?? '?') . '  ' . ($ch['type'] ?? '?') . '  «' . ($ch['title'] ?? '?') . '»  ссылка: ' . ($ch['link'] ?? '-'));
+        }
+        $main = max_main_chat();
+        say('  основной канал ЭкТен в MAX: ' . ($main !== '' ? 'chat_id ' . $main : 'НЕ НАЙДЕН среди каналов бота'));
+    } catch (Throwable $e) {
+        say('  FAIL: ' . redact($e->getMessage()));
+    }
+    return 0;
+}
+
+/** Публичная лента Telegram (t.me/s/…): id, дата, наличие картинки, ключ текста. Возвращает null, если лента недоступна. */
+function tg_public_history(string &$why): ?array
+{
+    $msgs = [];
+    $before = null;
+    for ($page = 0; $page < 120; $page++) {
+        $r = http('GET', 'https://t.me/s/' . TG_PUBLIC_USER . ($before ? '?before=' . $before : ''), ['timeout' => 40]);
+        if ($r['code'] !== 200 || $r['body'] === '') {
+            if ($page === 0) {
+                $why = 't.me/s/' . TG_PUBLIC_USER . ': HTTP ' . $r['code'] . ($r['error'] ? ' ' . $r['error'] : '') . ', пустой ответ';
+                return null;
+            }
+            break;
+        }
+        $dom = new DOMDocument();
+        @$dom->loadHTML('<?xml encoding="utf-8" ?>' . $r['body']);
+        $xp = new DOMXPath($dom);
+        $wraps = $xp->query("//div[contains(@class,'tgme_widget_message_wrap')]");
+        if (!$wraps || $wraps->length === 0) {
+            if ($page === 0) {
+                $why = 't.me/s/' . TG_PUBLIC_USER . ': страница есть, но сообщений в ней нет (лента отключена или канал без публичного просмотра)';
+                return null;
+            }
+            break;
+        }
+        $minId = null;
+        $new = 0;
+        foreach ($wraps as $w) {
+            $post = $xp->query(".//div[@data-post]", $w)->item(0);
+            if (!$post) {
+                continue;
+            }
+            $id = (int)substr((string)strrchr((string)$post->getAttribute('data-post'), '/'), 1);
+            $minId = $minId === null ? $id : min($minId, $id);
+            if (isset($msgs[$id])) {
+                continue;
+            }
+            $new++;
+            $textNode = $xp->query(".//div[contains(@class,'tgme_widget_message_text')]", $w)->item(0);
+            $time = $xp->query(".//time", $w)->item(0);
+            $msgs[$id] = [
+                'id' => $id,
+                'ts' => $time ? (int)strtotime((string)$time->getAttribute('datetime')) : 0,
+                'photo' => $xp->query(".//a[contains(@class,'tgme_widget_message_photo_wrap')]", $w)->length > 0,
+                'text' => $textNode ? trim((string)$textNode->textContent) : '',
+            ];
+        }
+        if ($new === 0 || $minId === null || $minId <= 1) {
+            break;
+        }
+        $before = $minId;
+        pause(0.7);
+    }
+    ksort($msgs);
+    return array_values($msgs);
+}
+
+/** История канала MAX через API бота (GET /messages). */
+function max_history(string $chat): array
+{
+    $msgs = [];
+    $to = null;
+    for ($page = 0; $page < 150; $page++) {
+        $r = max_api('GET', '/messages?chat_id=' . rawurlencode($chat) . '&count=100' . ($to ? '&to=' . $to : ''));
+        $items = $r['messages'] ?? [];
+        if (!$items) {
+            break;
+        }
+        $oldest = null;
+        $new = 0;
+        foreach ($items as $m) {
+            $ts = (int)($m['timestamp'] ?? 0);
+            $mid = (string)($m['body']['mid'] ?? $ts);
+            $oldest = $oldest === null ? $ts : min($oldest, $ts);
+            if (isset($msgs[$mid])) {
+                continue;
+            }
+            $new++;
+            $img = 0;
+            foreach ($m['body']['attachments'] ?? [] as $a) {
+                if (($a['type'] ?? '') === 'image') {
+                    $img++;
+                }
+            }
+            $msgs[$mid] = ['ts' => (int)($ts / 1000), 'photos' => $img, 'text' => trim((string)($m['body']['text'] ?? ''))];
+        }
+        if ($new === 0 || $oldest === null || count($items) < 100) {
+            break;
+        }
+        $to = $oldest - 1;
+        pause(0.5);
+    }
+    $list = array_values($msgs);
+    usort($list, static fn($a, $b) => $a['ts'] <=> $b['ts']);
+    return $list;
+}
+
+/**
+ * Сверка поста ВК с историей площадки. $hist — список сообщений по времени: ['text','photos'(int),'ts'].
+ * Картинки поста считаются как сообщения без текста, идущие непосредственно перед текстовым сообщением.
+ */
+function reconcile_post(array $content, array $hist, array $index): array
+{
+    $expectedPhotos = count($content['photos']);
+    $key = match_key($content['text']);
+    if ($key === '') {
+        return ['state' => 'не определено (пост без текста: сопоставить по картинкам нельзя)', 'missing_photos' => 0, 'dups' => 0];
+    }
+    $hits = $index[$key] ?? [];
+    if (!$hits) {
+        return ['state' => 'нет', 'missing_photos' => $expectedPhotos, 'dups' => 0];
+    }
+    $pos = $hits[0];
+    $have = 0;
+    for ($i = $pos - 1; $i >= 0 && $hist[$i]['text'] === '' && $hist[$i]['photos'] > 0; $i--) {
+        $have += $hist[$i]['photos'];
+    }
+    $state = 'есть';
+    $missing = max(0, $expectedPhotos - $have);
+    if ($missing > 0) {
+        $state = 'есть, не хватает фото';
+    }
+    $plain = static fn(string $s): int => mb_strlen(preg_replace('~https?://\S+|\s+~u', '', $s) ?? $s);
+    if ($plain($content['text']) <= 3800 && $plain($hist[$pos]['text']) < 0.9 * $plain($content['text'])) {
+        $state .= '; текст короче оригинала';
+    }
+    return ['state' => $state, 'missing_photos' => $missing, 'dups' => count($hits) - 1];
+}
+
+/** Аудит: стена ВК против фактической истории Telegram (публичная лента) и MAX (API). Ничего не публикует и не меняет. */
 function run_audit(): int
 {
     load_config();
     ensure_dirs();
-    $state = load_state();
+    $posts = vk_all_posts();
+    say('СВЕРКА (только чтение). Постов на стене ВК: ' . count($posts));
+    $contents = [];
+    foreach ($posts as $id => $p) {
+        $contents[$id] = post_content($p);
+    }
+    $todo = array_filter($contents, static fn($c) => $c['skip'] === null);
+    say('К копированию: ' . count($todo) . ', фотографий в них: ' . array_sum(array_map(static fn($c) => count($c['photos']), $todo)));
+
+    $platforms = [];
+    $why = '';
+    $tg = tg_public_history($why);
+    if ($tg === null) {
+        say('Telegram: история НЕДОСТУПНА — ' . $why . '. Bot API старую историю канала не отдаёт, результат не придумываю.');
+    } else {
+        $hist = array_map(static fn($m) => ['text' => $m['text'], 'photos' => $m['photo'] ? 1 : 0, 'ts' => $m['ts']], $tg);
+        say('Telegram: прочитано сообщений публичной ленты: ' . count($hist) . ($hist ? ', с ' . date('d.m.Y', $hist[0]['ts']) : ''));
+        $platforms['tg'] = $hist;
+    }
+    try {
+        $chat = Ctx::$cfg['MAX_BOT_TOKEN'] !== '' ? max_main_chat() : '';
+        if ($chat === '') {
+            say('MAX: канал не определён — история недоступна.');
+        } else {
+            $hist = max_history($chat);
+            say('MAX: chat_id ' . $chat . ', прочитано сообщений: ' . count($hist) . ($hist ? ', с ' . date('d.m.Y', $hist[0]['ts']) : ''));
+            $platforms['max'] = $hist;
+        }
+    } catch (Throwable $e) {
+        say('MAX: история НЕДОСТУПНА — ' . redact($e->getMessage()));
+    }
+
     $rows = [];
-    $photos = 0;
-    foreach (vk_all_posts() as $id => $p) {
-        $c = post_content($p);
-        $n = count($c['photos']);
-        $e = $state['posts'][(string)$id] ?? [];
-        $rows[] = [
-            'id' => $id,
-            'date' => date('Y-m-d H:i', (int)$p['date']),
-            'photos' => $n,
-            'text_len' => mb_strlen($c['text']),
-            'skip' => $c['skip'],
-            'tg' => $e['tg']['status'] ?? 'нет в учёте',
-            'max' => $e['max']['status'] ?? 'нет в учёте',
-        ];
-        $photos += $n;
+    $sum = [];
+    foreach ($platforms as $pl => $hist) {
+        $index = [];
+        foreach ($hist as $i => $m) {
+            if ($m['text'] !== '') {
+                $index[match_key($m['text'])][] = $i;
+            }
+        }
+        $sum[$pl] = ['missing_posts' => 0, 'missing_photos' => 0, 'partial' => 0, 'unknown' => 0, 'dups' => 0, 'ok' => 0];
+        foreach ($todo as $id => $content) {
+            $r = reconcile_post($content, $hist, $index);
+            $rows[$id][$pl] = $r;
+            if ($r['state'] === 'нет') {
+                $sum[$pl]['missing_posts']++;
+                $sum[$pl]['missing_photos'] += $r['missing_photos'];
+            } elseif (str_starts_with($r['state'], 'не определено')) {
+                $sum[$pl]['unknown']++;
+            } else {
+                $r['state'] === 'есть' ? $sum[$pl]['ok']++ : $sum[$pl]['partial']++;
+                $sum[$pl]['missing_photos'] += $r['missing_photos'];
+            }
+            $sum[$pl]['dups'] += $r['dups'];
+        }
     }
-    file_put_contents(Ctx::$data . '/audit.json', json_encode($rows, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
-    $todo = array_filter($rows, static fn($r) => $r['skip'] === null);
-    say('Постов на стене ВК: ' . count($rows) . ', к копированию: ' . count($todo) . ', фотографий: ' . $photos);
-    foreach (['tg', 'max'] as $p) {
-        $missing = array_filter($todo, static fn($r) => $r[$p] !== 'done');
-        $ph = array_sum(array_column($missing, 'photos'));
-        say(platform_name($p) . ': не подтверждено публикаций ' . count($missing) . ', фотографий в них ' . $ph);
+    say('');
+    foreach ($sum as $pl => $s) {
+        say(platform_name($pl) . ': полностью есть ' . $s['ok'] . ', нет совсем ' . $s['missing_posts'] . ', неполные ' . $s['partial']
+            . ', не определено ' . $s['unknown'] . ', дублей ' . $s['dups'] . ', не хватает фотографий ' . $s['missing_photos']);
     }
-    foreach ($rows as $r) {
-        say(sprintf('  №%d  %s  фото %d  текст %d  TG: %s  MAX: %s%s', $r['id'], $r['date'], $r['photos'], $r['text_len'], $r['tg'], $r['max'], $r['skip'] ? '  [' . $r['skip'] . ']' : ''));
+    say('');
+    foreach ($todo as $id => $content) {
+        $line = sprintf('  №%d  %s  фото %d  текст %d', $id, date('Y-m-d', (int)$posts[$id]['date']), count($content['photos']), mb_strlen($content['text']));
+        foreach ($platforms as $pl => $_) {
+            $line .= '  ' . strtoupper($pl) . ': ' . $rows[$id][$pl]['state'];
+        }
+        say($line);
     }
-    say('Таблица записана в data/audit.json. Состояние не менялось, публикаций не было.');
+    file_put_contents(Ctx::$data . '/audit.json', json_encode(['summary' => $sum, 'posts' => $rows], JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+    say('');
+    say('Публикаций не было, состояние не менялось.');
     return 0;
 }
 
@@ -1382,6 +1657,9 @@ function main(array $argv): int
         if (isset($args['status'])) {
             return run_status();
         }
+        if (isset($args['probe'])) {
+            return run_probe();
+        }
         if (isset($args['audit'])) {
             return run_audit();
         }
@@ -1394,7 +1672,7 @@ function main(array $argv): int
         if (isset($args['cron'])) {
             return run_cron();
         }
-        say('Команды: --check, --dry-run [--post=N], --test-post=N, --status, --audit, --enqueue=ДАТА|N,N [--platforms=tg,max], --retry=N, --selftest, --cron');
+        say('Команды: --check, --dry-run [--post=N], --test-post=N, --status, --probe, --audit, --enqueue=ДАТА|N,N [--platforms=tg,max], --retry=N, --selftest, --cron');
         return 0;
     } catch (Throwable $e) {
         say('Ошибка: ' . redact($e->getMessage()));
