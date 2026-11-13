@@ -1,0 +1,84 @@
+name: crosspost
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'cron | check | audit | enqueue'
+        default: 'cron'
+        type: choice
+        options: [cron, check, audit, enqueue]
+      enqueue_arg:
+        description: 'Для enqueue: дата ГГГГ-ММ-ДД или номера постов через запятую'
+        default: ''
+      platforms:
+        description: 'Для enqueue: tg, max или tg,max'
+        default: 'tg,max'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: crosspost
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    env:
+      MODE: ${{ vars.MODE || 'test' }}
+      VK_SERVICE_KEY: ${{ secrets.VK_SERVICE_KEY }}
+      VK_GROUP: ${{ vars.VK_GROUP || '241671413' }}
+      TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
+      TG_TEST_CHAT: ${{ secrets.TG_TEST_CHAT }}
+      TG_MAIN_CHAT: ${{ vars.TG_MAIN_CHAT || '-1004297433128' }}
+      MAX_BOT_TOKEN: ${{ secrets.MAX_BOT_TOKEN }}
+      MAX_TEST_CHAT: ${{ secrets.MAX_TEST_CHAT }}
+      MAX_MAIN_CHAT: ${{ secrets.MAX_MAIN_CHAT }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore state (ветка state)
+        run: |
+          mkdir -p data
+          if git ls-remote --exit-code --heads origin state >/dev/null 2>&1; then
+            git fetch --depth=1 origin state
+            git show FETCH_HEAD:state.json > data/state.json 2>/dev/null || true
+            git show FETCH_HEAD:journal.log > data/journal.log 2>/dev/null || true
+          fi
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: curl, mbstring, json
+
+      - name: Run
+        run: |
+          set -o pipefail
+          action="${{ github.event.inputs.action || 'cron' }}"
+          case "$action" in
+            check)   php crosspost.php --check ;;
+            audit)   php crosspost.php --audit ;;
+            enqueue) php crosspost.php --enqueue="${{ github.event.inputs.enqueue_arg }}" --platforms="${{ github.event.inputs.platforms }}" ;;
+            *)       php crosspost.php --cron ;;
+          esac
+
+      - name: Save state (ветка state)
+        if: always()
+        run: |
+          [ -f data/state.json ] || exit 0
+          d=$(mktemp -d)
+          cp data/state.json "$d/"
+          [ -f data/journal.log ] && cp data/journal.log "$d/"
+          [ -f data/audit.json ] && cp data/audit.json "$d/"
+          cd "$d"
+          git init -q
+          git config user.name "crosspost-bot"
+          git config user.email "crosspost-bot@users.noreply.github.com"
+          git checkout -q -b state
+          git add -A
+          git commit -q -m "state $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          git push -q --force "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" state
