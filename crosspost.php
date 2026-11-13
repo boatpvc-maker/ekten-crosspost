@@ -221,7 +221,17 @@ function vk_recent_posts(): array
 
 function vk_post(int $postId): ?array
 {
-    $r = vk('wall.getById', ['posts' => '-' . vk_group_id() . '_' . $postId]);
+    try {
+        $r = vk('wall.getById', ['posts' => '-' . vk_group_id() . '_' . $postId]);
+    } catch (ApiError $e) {
+        // Сервисный ключ не может wall.getById (ошибка 1051): берём пост из полной стены.
+        if ($e->apiCode !== '1051') {
+            throw $e;
+        }
+        static $all = null;
+        $all ??= vk_all_posts();
+        return $all[$postId] ?? null;
+    }
     $items = $r['items'] ?? $r;
     return isset($items[0]['id']) ? $items[0] : null;
 }
