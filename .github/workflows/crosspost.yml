@@ -40,7 +40,7 @@ jobs:
       TG_MAIN_CHAT: ${{ vars.TG_MAIN_CHAT || '-1004297433128' }}
       MAX_BOT_TOKEN: ${{ secrets.MAX_BOT_TOKEN }}
       MAX_TEST_CHAT: ${{ secrets.MAX_TEST_CHAT }}
-      MAX_MAIN_CHAT: ${{ secrets.MAX_MAIN_CHAT || vars.MAX_MAIN_CHAT }}
+      MAX_MAIN_CHAT: ${{ secrets.MAX_MAIN_CHAT || vars.MAX_MAIN_CHAT || '-79549743674804' }}
       ACTION_INPUT: ${{ github.event.inputs.action }}
       ENQUEUE_ARG: ${{ github.event.inputs.enqueue_arg }}
       ENQUEUE_PLATFORMS: ${{ github.event.inputs.platforms }}

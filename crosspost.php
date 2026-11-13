@@ -1225,6 +1225,17 @@ function run_probe(): int
         }
         $main = max_main_chat();
         say('  основной канал ЭкТен в MAX: ' . ($main !== '' ? 'chat_id ' . $main : 'НЕ НАЙДЕН среди каналов бота'));
+        if ($main !== '') {
+            try {
+                $info = max_api('GET', '/chats/' . rawurlencode($main));
+                $mem = max_api('GET', '/chats/' . rawurlencode($main) . '/members/me');
+                $perms = $mem['permissions'] ?? [];
+                say('  MAIN: «' . ($info['title'] ?? '?') . '» (' . ($info['type'] ?? '?') . '), ссылка ' . ($info['link'] ?? '-') . ', бот администратор: '
+                    . (!empty($mem['is_admin']) ? 'да' : 'нет') . ', права: ' . (is_array($perms) ? implode(', ', $perms) : '?'));
+            } catch (Throwable $e) {
+                say('  MAIN: ' . redact($e->getMessage()));
+            }
+        }
     } catch (Throwable $e) {
         say('  FAIL: ' . redact($e->getMessage()));
     }
@@ -1332,7 +1343,7 @@ function max_history(string $chat): array
  * Сверка поста ВК с историей площадки. $hist — список сообщений по времени: ['text','photos'(int),'ts'].
  * Картинки поста считаются как сообщения без текста, идущие непосредственно перед текстовым сообщением.
  */
-function reconcile_post(array $content, array $hist, array $index): array
+function reconcile_post(array $content, array $hist, array $index, array $vkKeys = []): array
 {
     $expectedPhotos = count($content['photos']);
     $key = match_key($content['text']);
@@ -1359,8 +1370,13 @@ function reconcile_post(array $content, array $hist, array $index): array
         $state = 'есть, не хватает фото';
     }
     $plain = static fn(string $s): int => mb_strlen(preg_replace('~https?://\S+|\s+~u', '', $s) ?? $s);
-    if ($plain($content['text']) <= 3800 && $plain($hist[$pos]['text']) < 0.9 * $plain($content['text'])) {
-        $state .= '; текст короче оригинала (' . $plain($hist[$pos]['text']) . ' из ' . $plain($content['text']) . ')';
+    // Продолжение текста: следующие сообщения без картинок в течение 5 минут, не являющиеся другим постом ВК.
+    $got = $plain($hist[$pos]['text']);
+    for ($i = $pos + 1; $i < count($hist) && $hist[$i]['photos'] === 0 && $hist[$i]['text'] !== '' && $hist[$i]['ts'] - $ts <= 300 && !isset($vkKeys[match_key($hist[$i]['text'])]); $i++) {
+        $got += $plain($hist[$i]['text']);
+    }
+    if ($got < 0.9 * $plain($content['text'])) {
+        $state .= '; текст неполный (' . $got . ' из ' . $plain($content['text']) . ')';
     }
     return ['state' => $state, 'missing_photos' => $missing, 'dups' => count($hits) - 1];
 }
@@ -1404,6 +1420,12 @@ function run_audit(): int
 
     $rows = [];
     $sum = [];
+    $vkKeys = [];
+    foreach ($todo as $c) {
+        if (match_key($c['text']) !== '') {
+            $vkKeys[match_key($c['text'])] = true;
+        }
+    }
     foreach ($platforms as $pl => $hist) {
         $index = [];
         foreach ($hist as $i => $m) {
@@ -1413,7 +1435,7 @@ function run_audit(): int
         }
         $sum[$pl] = ['missing_posts' => 0, 'missing_photos' => 0, 'partial' => 0, 'unknown' => 0, 'dups' => 0, 'ok' => 0];
         foreach ($todo as $id => $content) {
-            $r = reconcile_post($content, $hist, $index);
+            $r = reconcile_post($content, $hist, $index, $vkKeys);
             $rows[$id][$pl] = $r;
             if ($r['state'] === 'нет') {
                 $sum[$pl]['missing_posts']++;
