@@ -1482,7 +1482,7 @@ function run_audit(): int
     }
     say('');
     foreach ($todo as $id => $content) {
-        $line = sprintf('  №%d  %s  фото %d  текст %d', $id, date('Y-m-d', (int)$posts[$id]['date']), count($content['photos']), mb_strlen($content['text']));
+        $line = sprintf('  №%d  %s  фото %d  текст %d', $id, date('Y-m-d H:i', (int)$posts[$id]['date']), count($content['photos']), mb_strlen($content['text']));
         foreach ($platforms as $pl => $_) {
             $line .= '  ' . strtoupper($pl) . ': ' . $rows[$id][$pl]['state'];
         }
