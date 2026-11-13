@@ -1398,7 +1398,7 @@ function reconcile_post(array $content, array $hist, array $index, array $vkKeys
     $plain = static fn(string $s): int => mb_strlen(preg_replace('~https?://\S+|\s+~u', '', $s) ?? $s);
     // Продолжение текста: следующие сообщения без картинок в течение 5 минут, не являющиеся другим постом ВК.
     $got = $plain($hist[$pos]['text']);
-    for ($i = $pos + 1; $i < count($hist) && $hist[$i]['photos'] === 0 && $hist[$i]['text'] !== '' && $hist[$i]['ts'] - $ts <= 300 && !isset($vkKeys[match_key($hist[$i]['text'])]); $i++) {
+    for ($i = $pos + 1; $i < count($hist) && $hist[$i]['photos'] === 0 && $hist[$i]['text'] !== '' && $hist[$i]['ts'] - $ts <= 3600 && !isset($vkKeys[match_key($hist[$i]['text'])]); $i++) {
         $got += $plain($hist[$i]['text']);
     }
     if ($got < 0.9 * $plain($content['text'])) {
