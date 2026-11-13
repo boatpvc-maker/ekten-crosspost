@@ -137,7 +137,12 @@ function http(string $method, string $url, array $opt = []): array
         CURLOPT_MAXREDIRS => 3,
     ];
     $ca = Ctx::$data . '/ca-bundle.pem';
-    if (is_file($ca)) {
+    // Серверы MAX используют сертификат российского корневого УЦ Минцифры: он доверяется только для них.
+    $host = (string)parse_url($url, PHP_URL_HOST);
+    $maxCa = Ctx::$data . '/ca-max.pem';
+    if (is_file($maxCa) && preg_match('/(^|\.)(max\.ru|oneme\.ru)$/i', $host)) {
+        $o[CURLOPT_CAINFO] = $maxCa;
+    } elseif (is_file($ca)) {
         $o[CURLOPT_CAINFO] = $ca;
     }
     if ($method === 'POST') {
