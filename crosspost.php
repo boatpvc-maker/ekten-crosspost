@@ -1118,10 +1118,24 @@ function max_main_chat(): string
     if (Ctx::$cfg['MAX_MAIN_CHAT'] !== '') {
         return Ctx::$cfg['MAX_MAIN_CHAT'];
     }
-    foreach (max_chats() as $c) {
-        if (stripos((string)($c['link'] ?? ''), MAX_PUBLIC_LINK) !== false) {
-            return (string)$c['chat_id'];
+    foreach (['/chats/@' . MAX_PUBLIC_LINK, '/chats/' . MAX_PUBLIC_LINK] as $path) {
+        try {
+            $c = max_api('GET', $path);
+            if (!empty($c['chat_id'])) {
+                return (string)$c['chat_id'];
+            }
+        } catch (Throwable $e) {
+            continue;
         }
+    }
+    try {
+        foreach (max_chats() as $c) {
+            if (stripos((string)($c['link'] ?? ''), MAX_PUBLIC_LINK) !== false) {
+                return (string)$c['chat_id'];
+            }
+        }
+    } catch (Throwable $e) {
+        return '';
     }
     return '';
 }
@@ -1170,10 +1184,22 @@ function run_probe(): int
     try {
         $me = max_api('GET', '/me');
         say('  PASS: бот ' . ($me['name'] ?? $me['first_name'] ?? '?') . (isset($me['username']) ? ' (@' . $me['username'] . ')' : ''));
-        $chats = max_chats();
-        say('  каналов и чатов, где бот состоит: ' . count($chats));
-        foreach ($chats as $ch) {
-            say('    chat_id ' . ($ch['chat_id'] ?? '?') . '  ' . ($ch['type'] ?? '?') . '  «' . ($ch['title'] ?? '?') . '»  ссылка: ' . ($ch['link'] ?? '-'));
+        foreach (['/chats/@' . MAX_PUBLIC_LINK, '/chats/' . MAX_PUBLIC_LINK] as $path) {
+            try {
+                $ch = max_api('GET', $path);
+                say('  ' . $path . ': chat_id ' . ($ch['chat_id'] ?? '?') . ', ' . ($ch['type'] ?? '?') . ', «' . ($ch['title'] ?? '?') . '», статус бота в канале: ' . ($ch['status'] ?? '?'));
+            } catch (Throwable $e) {
+                say('  ' . $path . ': ' . redact($e->getMessage()));
+            }
+        }
+        try {
+            $chats = max_chats();
+            say('  каналов и чатов, где бот состоит: ' . count($chats));
+            foreach ($chats as $ch) {
+                say('    chat_id ' . ($ch['chat_id'] ?? '?') . '  ' . ($ch['type'] ?? '?') . '  «' . ($ch['title'] ?? '?') . '»  ссылка: ' . ($ch['link'] ?? '-'));
+            }
+        } catch (Throwable $e) {
+            say('  список чатов бота: ' . redact($e->getMessage()));
         }
         $main = max_main_chat();
         say('  основной канал ЭкТен в MAX: ' . ($main !== '' ? 'chat_id ' . $main : 'НЕ НАЙДЕН среди каналов бота'));
@@ -1296,8 +1322,13 @@ function reconcile_post(array $content, array $hist, array $index): array
         return ['state' => 'нет', 'missing_photos' => $expectedPhotos, 'dups' => 0];
     }
     $pos = $hits[0];
-    $have = 0;
-    for ($i = $pos - 1; $i >= 0 && $hist[$i]['text'] === '' && $hist[$i]['photos'] > 0; $i--) {
+    // Картинки: в самом сообщении (подпись) и в соседних сообщениях без текста, отправленных в те же секунды.
+    $have = $hist[$pos]['photos'];
+    $ts = $hist[$pos]['ts'];
+    for ($i = $pos - 1; $i >= 0 && $hist[$i]['text'] === '' && $hist[$i]['photos'] > 0 && $ts - $hist[$i]['ts'] <= 30; $i--) {
+        $have += $hist[$i]['photos'];
+    }
+    for ($i = $pos + 1; $i < count($hist) && $hist[$i]['text'] === '' && $hist[$i]['photos'] > 0 && $hist[$i]['ts'] - $ts <= 3; $i++) {
         $have += $hist[$i]['photos'];
     }
     $state = 'есть';

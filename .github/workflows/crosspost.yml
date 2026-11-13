@@ -73,10 +73,11 @@ jobs:
         run: |
           set -o pipefail
           action="${ACTION_INPUT}"
-          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then action="$(tr -d '[:space:]' < trigger.txt)"; fi
+          if [ "${GITHUB_EVENT_NAME}" = "push" ]; then action="$(head -n1 trigger.txt | awk '{print $1}')"; fi
           [ -n "$action" ] || action=cron
           case "$action" in
             check|probe|audit) php crosspost.php --$action 2>&1 | tee data/report.txt ;;
+            full) { php crosspost.php --probe; echo; php crosspost.php --audit; } 2>&1 | tee data/report.txt ;;
             enqueue) php crosspost.php --enqueue="${ENQUEUE_ARG}" --platforms="${ENQUEUE_PLATFORMS}" 2>&1 | tee data/report.txt ;;
             cron)    php crosspost.php --cron ;;
             *) echo "неизвестное действие"; exit 1 ;;
