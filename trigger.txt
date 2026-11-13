@@ -1,1 +1,1 @@
-cron 2
+restore max 65,66,67,68,69
