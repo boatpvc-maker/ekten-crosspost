@@ -1062,6 +1062,22 @@ function run_retry(int $postId): int
     return 0;
 }
 
+/** Создаёт начальное состояние (все текущие посты ВК считаются старыми) без публикаций. Существующее не трогает. */
+function run_init_state(): int
+{
+    load_config();
+    ensure_dirs();
+    if (load_state()) {
+        say('Состояние уже есть — не изменяю.');
+        return 0;
+    }
+    $ids = array_map(static fn($p) => (int)$p['id'], vk_recent_posts());
+    save_state(['mode' => Ctx::$cfg['MODE'], 'group' => vk_group_id(), 'started_at' => now(), 'initial_ids' => $ids, 'posts' => []]);
+    journal('-', '-', 'состояние создано вручную в режиме ' . Ctx::$cfg['MODE'] . ' (последний пост ' . ($ids ? max($ids) : 0) . ')');
+    say('Состояние создано, постов в начальном списке: ' . count($ids) . '. Публикаций не было.');
+    return 0;
+}
+
 // ---------------------------------------------------------------- Накопленные посты
 
 /** Вся стена сообщества от старых к новым (только чтение). */
@@ -1736,6 +1752,9 @@ function main(array $argv): int
         }
         if (isset($args['status'])) {
             return run_status();
+        }
+        if (isset($args['init-state'])) {
+            return run_init_state();
         }
         if (isset($args['probe'])) {
             return run_probe();

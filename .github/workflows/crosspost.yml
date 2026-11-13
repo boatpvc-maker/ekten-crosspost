@@ -12,7 +12,7 @@ on:
         description: 'cron | check | probe | audit | enqueue'
         default: 'cron'
         type: choice
-        options: [cron, check, probe, audit, enqueue]
+        options: [cron, check, probe, audit, status, init, enqueue]
       enqueue_arg:
         description: 'Для enqueue: дата ГГГГ-ММ-ДД или номера постов через запятую'
         default: ''
@@ -76,7 +76,8 @@ jobs:
           if [ "${GITHUB_EVENT_NAME}" = "push" ]; then action="$(head -n1 trigger.txt | awk '{print $1}')"; fi
           [ -n "$action" ] || action=cron
           case "$action" in
-            check|probe|audit) php crosspost.php --$action 2>&1 | tee data/report.txt ;;
+            check|probe|audit|status) php crosspost.php --$action 2>&1 | tee data/report.txt ;;
+            init) php crosspost.php --init-state 2>&1 | tee data/report.txt ;;
             full) { php crosspost.php --probe; echo; php crosspost.php --audit; } 2>&1 | tee data/report.txt ;;
             enqueue) php crosspost.php --enqueue="${ENQUEUE_ARG}" --platforms="${ENQUEUE_PLATFORMS}" 2>&1 | tee data/report.txt ;;
             cron)    php crosspost.php --cron ;;
