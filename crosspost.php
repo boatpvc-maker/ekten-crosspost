@@ -620,8 +620,6 @@ function load_config(): void
         if ($raw === false) {
             throw new RuntimeException('Файл config.ini не читается: проверьте, что каждая строка вида ИМЯ = значение');
         }
-    } elseif (getenv('VK_SERVICE_KEY') === false) {
-        throw new RuntimeException('Нет файла настроек config.ini');
     }
     $cfg = [];
     foreach (CONFIG_KEYS as $k) {
@@ -930,7 +928,16 @@ function run_check(): int
             say('  ОШИБКА: ' . redact($e->getMessage()));
         }
     }
+    $need = ['VK_SERVICE_KEY', 'VK_GROUP', 'TG_BOT_TOKEN', 'MAX_BOT_TOKEN', 'TG_' . strtoupper($c['MODE']) . '_CHAT', 'MAX_' . strtoupper($c['MODE']) . '_CHAT'];
+    $missing = array_values(array_filter($need, static fn($k) => $c[$k] === ''));
     say('');
+    if ($missing) {
+        $msg = 'Не заданы настройки: ' . implode(', ', $missing) . ' (значения секретов не выводятся).';
+        say($msg);
+        if (getenv('GITHUB_ACTIONS') === 'true') {
+            echo '::error title=crosspost check::' . $msg . PHP_EOL;
+        }
+    }
     say($ok ? 'ИТОГ: всё готово.' : 'ИТОГ: есть замечания (см. выше).');
     return $ok ? 0 : 1;
 }
