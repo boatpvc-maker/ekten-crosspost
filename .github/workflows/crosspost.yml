@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      MODE: ${{ vars.MODE || 'test' }}
+      MODE: ${{ vars.MODE || 'main' }}
       VK_SERVICE_KEY: ${{ secrets.VK_SERVICE_KEY }}
       VK_GROUP: ${{ vars.VK_GROUP || '241671413' }}
       TG_BOT_TOKEN: ${{ secrets.TG_BOT_TOKEN }}
@@ -77,6 +77,12 @@ jobs:
           [ -n "$action" ] || action=cron
           case "$action" in
             check|probe|audit|status) php crosspost.php --$action 2>&1 | tee data/report.txt ;;
+            restore)
+              # trigger.txt: "restore tg|max 109,110,111" — партия накопленных постов; сначала обычный запуск (создаёт основу состояния)
+              pl="$(head -n1 trigger.txt | awk '{print $2}')"; ids="$(head -n1 trigger.txt | awk '{print $3}')"
+              case "$pl" in tg|max) ;; *) echo "платформа должна быть tg или max"; exit 1 ;; esac
+              case "$ids" in ''|*[!0-9,]*) echo "список номеров некорректен"; exit 1 ;; esac
+              { php crosspost.php --cron; php crosspost.php --enqueue="$ids" --platforms="$pl"; php crosspost.php --cron; php crosspost.php --status; } 2>&1 | tee data/report.txt ;;
             init) php crosspost.php --init-state 2>&1 | tee data/report.txt ;;
             full) { php crosspost.php --probe; echo; php crosspost.php --audit; } 2>&1 | tee data/report.txt ;;
             enqueue) php crosspost.php --enqueue="${ENQUEUE_ARG}" --platforms="${ENQUEUE_PLATFORMS}" 2>&1 | tee data/report.txt ;;
