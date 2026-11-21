@@ -1,0 +1,1846 @@
+{
+    "summary": {
+        "tg": {
+            "missing_posts": 46,
+            "missing_photos": 56,
+            "partial": 3,
+            "unknown": 1,
+            "dups": 0,
+            "ok": 102
+        },
+        "max": {
+            "missing_posts": 89,
+            "missing_photos": 110,
+            "partial": 1,
+            "unknown": 1,
+            "dups": 2,
+            "ok": 61
+        }
+    },
+    "posts": {
+        "1": {
+            "tg": {
+                "state": "не определено (пост без текста: сопоставить по картинкам нельзя)",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "не определено (пост без текста: сопоставить по картинкам нельзя)",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "2": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "4": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "5": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "6": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "7": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "8": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "9": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "10": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "11": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "12": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "13": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "14": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "15": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "16": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "17": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "18": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "19": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "20": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "21": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "22": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "23": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "24": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "25": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "26": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "27": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "28": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "29": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "30": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "31": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "34": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "35": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 1
+            }
+        },
+        "36": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "37": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "38": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "39": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "40": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть; текст неполный (3239 из 3701)",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "41": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "42": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "43": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 1
+            }
+        },
+        "45": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "46": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "47": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "48": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "49": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "50": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "51": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "52": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "53": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "54": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "55": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "56": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "58": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "59": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "61": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "62": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "63": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "65": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "66": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "67": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "68": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "69": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "70": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "71": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "72": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "73": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "74": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 5,
+                "dups": 0
+            }
+        },
+        "75": {
+            "tg": {
+                "state": "есть, не хватает фото",
+                "missing_photos": 2,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 3,
+                "dups": 0
+            }
+        },
+        "76": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "77": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "78": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 2,
+                "dups": 0
+            }
+        },
+        "79": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 2,
+                "dups": 0
+            }
+        },
+        "80": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 2,
+                "dups": 0
+            }
+        },
+        "81": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "82": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 2,
+                "dups": 0
+            }
+        },
+        "83": {
+            "tg": {
+                "state": "есть, не хватает фото",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 2,
+                "dups": 0
+            }
+        },
+        "84": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "85": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "86": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "87": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "88": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "89": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "90": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "91": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "92": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "93": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "94": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "95": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "96": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "97": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "98": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "99": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "100": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "101": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "103": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "104": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "105": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "106": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "107": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "108": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 4,
+                "dups": 0
+            }
+        },
+        "109": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "110": {
+            "tg": {
+                "state": "есть; текст неполный (3498 из 4563)",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "111": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "113": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "114": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "115": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "116": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "117": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "118": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "119": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "120": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "121": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "122": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "123": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "124": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "125": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 4,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 4,
+                "dups": 0
+            }
+        },
+        "126": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 4,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 4,
+                "dups": 0
+            }
+        },
+        "127": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "128": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 3,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 3,
+                "dups": 0
+            }
+        },
+        "129": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 2,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 2,
+                "dups": 0
+            }
+        },
+        "130": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "131": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "132": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "133": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "134": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "135": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "136": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "138": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "139": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "140": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "141": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "142": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "143": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "144": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "145": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "146": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        },
+        "147": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "148": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "149": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "150": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "151": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "152": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "153": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "154": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "155": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "156": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "157": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "158": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "159": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "160": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "161": {
+            "tg": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            },
+            "max": {
+                "state": "нет",
+                "missing_photos": 1,
+                "dups": 0
+            }
+        },
+        "166": {
+            "tg": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            },
+            "max": {
+                "state": "есть",
+                "missing_photos": 0,
+                "dups": 0
+            }
+        }
+    }
+}
